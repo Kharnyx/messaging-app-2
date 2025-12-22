@@ -2,6 +2,7 @@
 
 const express = require("express");
 const https = require("https");
+const http = require("http");
 const ws = require("ws");
 const path = require("path");
 const fs = require("fs");
@@ -10,10 +11,11 @@ const { deprecate } = require("util");
 
 const app = express();
 
-// --- HTTPS CONFIGURATION ---
-const isProduction = process.env.NODE_ENV === "production";
+let server = http.createServer(app);
 
-let server;
+// --- HTTPS CONFIGURATION ---
+/*
+const isProduction = process.env.NODE_ENV === "production";
 
 if (isProduction) {
   // In production: The hosting provider handles SSL
@@ -26,6 +28,7 @@ if (isProduction) {
   };
   server = https.createServer(sslOptions, app);
 }
+*/
 
 const wss = new ws.Server({ server });
 const port = 3000;
