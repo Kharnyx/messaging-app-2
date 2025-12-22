@@ -1,17 +1,33 @@
 // server.js
 
 const express = require("express");
-const http = require("http");
+const https = require("https");
 const ws = require("ws");
 const path = require("path");
-const { constants } = require("fs/promises");
+const fs = require("fs");
 const crypto = require("crypto");
 const { deprecate } = require("util");
 
 const app = express();
-const server = http.createServer(app);
-const wss = new ws.Server({ server });
 
+// --- HTTPS CONFIGURATION ---
+const isProduction = process.env.NODE_ENV === "production";
+
+let server;
+
+if (isProduction) {
+  // In production: The hosting provider handles SSL
+  server = https.createServer(app);
+} else {
+  // Locally: Use self-signed certificates
+  const sslOptions = {
+    key: fs.readFileSync(path.join(__dirname, "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "cert.pem"))
+  };
+  server = https.createServer(sslOptions, app);
+}
+
+const wss = new ws.Server({ server });
 const port = 3000;
 
 
@@ -312,5 +328,5 @@ function sendMessagesToClient(client) {
 }
 
 server.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at https://localhost:${port}`);
 });
