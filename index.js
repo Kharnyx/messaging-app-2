@@ -40,7 +40,8 @@ let createdConversations = [];
 
 const clients = new Map(); // Store data on connected clients
 
-const publicPath = path.join(__dirname, '.', 'dist');
+// const publicPath = path.join(__dirname, '.', 'dist');
+const publicPath = path.join(__dirname, "/public")
 app.use(express.static(publicPath));
 
 app.get("/", (req, res) => {
@@ -114,7 +115,7 @@ wss.on("connection", (socket) => {
   // console.log(userIdsList);
 
   socket.on("pong", () => {
-    // console.log("Pong recieved from client");
+    console.log("Pong recieved from client");
   });
 
   socket.on("message", (message) => {
@@ -170,59 +171,18 @@ wss.on("connection", (socket) => {
         })
       );
     } else if (parsedMessage.type === "message") {
-      // console.log(payload)
-      if (payload.recipientIds.length < 1) {
-        payload.recipientIds[0] = "global-chat";
-      }
-      allMessages.push(payload);
-
-      for (let client of wss.clients) {
-        if (client != socket && payload.recipientIds.includes(clients.get(client)?.userId)) {
-          let conversation = clients.get(client)?.conversations;
-          let found = false;
-          for (let i = 0; i < conversation.length; i++) {
-            if (arraysAreEqual(conversation[i].users, payload.recipientIds)) {
-              found = true;
-              break;
-            }
-          }
-
-          createdConversations.push(payload.recipientIds);
-
-          if (found === false) {
-            conversation.push({ users: payload.recipientIds });
-
-            client.send(
-              JSON.stringify({
-                type: "create_conversation",
-                status: {
-                  code: "success",
-                  message: "Conversation created",
-                },
-                data: {
-                  // name: name,
-                  filteredUsers: payload.recipientIds
-                }
-              })
-            );
-          }
-          // console.log(`CONVO (${clients.get(client)?.userId})`, conversation);
-          // console.log(`CONVO EXISTS`, conversation.indexOf(payload.recipientIds));
-          // console.log(`CONVO NUMBER`, conversation[conversation.indexOf(payload.recipientIds.sort)])
-          // for (let element of conversation)
+      if (payload.messages && payload.messages.length > 0) {
+        for (let i = 0; i < payload.messages.length; i++) {
+          // console.log(payload.messages[i]);
+          handleMessage(payload.messages[i]);
         }
+      } else {
+        // console.log(payload);
+        handleMessage(payload);
       }
-
-      const key = getConversationKey(payload.recipientIds);
-
-      if (!messagesByConversations[key]) messagesByConversations[key] = [];
-      messagesByConversations[key].push(payload);
-
-      // console.log(messagesByConversations);
-
-      payload.recipientIds
 
       sendMessagesToClients();
+
     } else if (parsedMessage.type === "create_conversation") {
       const users = payload.users.filter(user => userIdsList.includes(user));
       // for (let i = 0; i < userIdsList.length; i++) {
@@ -294,14 +254,70 @@ wss.on("connection", (socket) => {
     console.log(`${userId} disconnected`);
   });
 
-});
 
-const sendMessagesToClients = () => {
-  console.log("sending messages to clients");
-  for (let client of wss.clients) {
-    sendMessagesToClient(client);
+
+  function handleMessage(payload) {
+    // console.log(payload)
+    if (payload.recipientIds.length < 1) {
+      payload.recipientIds[0] = "global-chat";
+    }
+    allMessages.push(payload);
+
+    for (let client of wss.clients) {
+      if (client != socket && payload.recipientIds.includes(clients.get(client)?.userId)) {
+        let conversation = clients.get(client)?.conversations;
+        let found = false;
+        for (let i = 0; i < conversation.length; i++) {
+          if (arraysAreEqual(conversation[i].users, payload.recipientIds)) {
+            found = true;
+            break;
+          }
+        }
+
+        createdConversations.push(payload.recipientIds);
+
+        if (found === false) {
+          conversation.push({ users: payload.recipientIds });
+
+          client.send(
+            JSON.stringify({
+              type: "create_conversation",
+              status: {
+                code: "success",
+                message: "Conversation created",
+              },
+              data: {
+                // name: name,
+                filteredUsers: payload.recipientIds
+              }
+            })
+          );
+        }
+        // console.log(`CONVO (${clients.get(client)?.userId})`, conversation);
+        // console.log(`CONVO EXISTS`, conversation.indexOf(payload.recipientIds));
+        // console.log(`CONVO NUMBER`, conversation[conversation.indexOf(payload.recipientIds.sort)])
+        // for (let element of conversation)
+      }
+    }
+
+    const key = getConversationKey(payload.recipientIds);
+
+    if (!messagesByConversations[key]) messagesByConversations[key] = [];
+    messagesByConversations[key].push(payload);
+
+    // console.log(messagesByConversations);
+
+    payload.recipientIds
   }
-}
+
+  const sendMessagesToClients = () => {
+    console.log("sending messages to clients");
+    for (let client of wss.clients) {
+      sendMessagesToClient(client);
+    }
+  }
+
+});
 
 function sendMessagesToClient(client) {
   let messagesToSend = [];
