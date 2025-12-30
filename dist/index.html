@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css crossorigin=anonymous referrerpolicy=no-referrer><title>Messaging App 2</title><link rel=stylesheet href=/public.fe9110db.css><body class="light no-transitions">
+
+  <button class=dropdown-btn id=toggle-settings aria-label="Toggle settings panel">
+    <i class="fa-gear fa-solid"></i>
+    <div class=tooltip>Toggle Settings</div>
+  </button>
+
+  <div class=dropdown-content data-toggle=conversation-option0>
+    <a class=dropdown-option href=#conversation-personalisation>
+      <i class="fa-clipboard fa-regular"></i>
+      Options
+    </a>
+  </div>
+
+  <div class=dropdown-subcontent data-toggle=toggle-subdropdown>
+    <a class=dropdown-option href=#settings-personalisation>
+      <i class="fa-clipboard fa-regular"></i>
+      Options
+    </a>
+    <a id=toggle-subdropdown-two class="dropdown-option dropdown-subcontent-option" href=#settings-accounts>
+      <i class="fa-regular fa-user"></i>
+      Accounts
+    </a>
+  </div>
+
+
+  <button id=toggle-menu aria-label="Toggle menu panel">
+    <div class=hamburger-icon>
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
+    </div>
+    
+    <div class=tooltip>Open Menu</div>
+  </button>
+
+  <div class=chat-menu id=chat-menu>
+    <header>
+      <div class=head>
+        
+        
+      </div>
+
+      <hr>
+    </header>
+
+    <div class=conversations-menu-container>
+      <header class=conversations-menu-header>
+
+        <div class=user-id-display>
+          <strong>Your ID</strong>
+          <p id=displayed-user-id></p>
+        </div>
+
+        <div class=tag-input id=add-conversations>
+          <div class=tags></div>
+          <div class=tag-options>
+            <input placeholder="User ID (e.g. User#1234)" aria-label="User ID">
+            <button id=add-user-button aria-label="Add user">
+              <div class=tooltip>Add user</div>
+              <i class="fa-plus fa-solid"></i>
+            </button>
+          </div>
+          <hr>
+          <button class=ripple-button id=create-conversation-button aria-label="Create conversation">Create
+            Conversation</button>
+        </div>
+      </header>
+
+      <hr>
+
+      <div class=search-conversations>
+        <input id=search-conversations placeholder="Search conversations">
+        <i class="fa-magnifying-glass fa-solid"></i>
+      </div>
+
+      <div class=chat-conversations-content>
+        <div class=conversations id=conversations></div>
+      </div>
+    </div>
+
+    <div class=settings-menu-container>
+
+      <div class=settings-menu-content>
+        <div class=settings-section id=settings-personalisation>
+          <h4>Personalisation</h4>
+          <div class=setting-option>
+            <p>Theme:</p>
+            <div data-selected class=option id=theme-select aria-label="Select theme">
+              <ul>
+                <li data-value=light>Light</li>
+                <li data-value=dark>Dark</li>
+                <li data-value=system>System Default</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class=chat-container id=chat-container>
+    <div class=chat-body id=chat-body></div>
+
+    <footer class=chat-footer-container>
+      <div class=chat-footer-margin></div>
+      <div id=chat-footer>
+        <button class=scroll-bottom id=scroll-bottom>
+          <i class="fa-arrow-down fa-solid"></i>
+        </button>
+        <textarea placeholder=Message... id=message-input aria-label="Type your message"></textarea>
+        <div class=message-options>
+          <div>
+            <button id=attach-file-button aria-label="Attach file">
+              <i class="fa-file fa-regular"></i>
+              <div class=tooltip>Attach files</div>
+              <input type=file id=attach-file-input accept=image/* multiple>
+            </button>
+          </div>
+
+          <div>
+            <button id=send-message-button aria-label="Send message">
+              <i class="fa-arrow-up fa-solid"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src=/public.00cc6934.js></script>
+
+  <script src=/public.518dcfba.js></script>
+  <script src=/public.121a8fce.js></script>
+  <script src=/public.12eb37fa.js></script>
+  <script src=/public.1944b9b7.js></script>
+  <script src=/public.04fef988.js></script>
+  <script src=/public.3682b1eb.js></script>
+  <script src=/public.c8dd9a50.js></script>
+  <script src=/public.bab71ff7.js></script>
+
+
+
